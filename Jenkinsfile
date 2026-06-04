@@ -47,7 +47,7 @@ pipeline {
 	 stage ('SonarQube Analysis') {
         steps {
             withSonarQubeEnv('MiSonarServer') {
-                sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=learning-center'
+                sh 'mvn clean verify sonar:sonar'
             }
         }
      }
