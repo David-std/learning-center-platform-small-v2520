@@ -4,6 +4,11 @@ pipeline {
     maven 'MAVEN_3_9_11'
     jdk 'JDK_24'
   }
+	environment {
+        // Nombre de la imagen que vamos a crear para nuestra aplicación
+        IMAGE_NAME = "learning-center-small"
+        TAG        = "${env.BUILD_NUMBER}" // Usa el número de ejecución de Jenkins como versión
+    }
 
   stages {
     stage ('Compile Project') {
@@ -39,21 +44,37 @@ pipeline {
       }
     }
 
-	 /*stage ('SonarQube Analysis') {
+	 stage ('SonarQube Analysis') {
         steps {
-            withSonarQubeEnv('sonarLocal') {
-                bat 'mvn clean verify sonar:sonar -Dsonar.projectKey=learning-center'
+            withSonarQubeEnv('MiSonarServer') {
+                sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=learning-center'
             }
         }
-     }*/
+     }
 
-    stage ('package Project') {
+	  stage('Construir Imagen Docker') {
+            steps {
+                script {
+                    echo "Iniciando la construcción de la imagen de Docker: ${IMAGE_NAME}:${TAG}"
+                    
+                    // Ejecuta el comando de Docker utilizando el socket compartido del Host
+                    // Supone que tienes un archivo 'Dockerfile' en la raíz de tu proyecto Spring Boot
+                    sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                    sh "docker build -t ${IMAGE_NAME}:latest ."
+                    
+                    echo "Imagen construida exitosamente."
+                }
+            }
+        }
+	  
+
+    /*stage ('package Project') {
         steps {
             withMaven(maven : 'MAVEN_3_9_11') {
                 sh 'mvn package'
             }
         }
-    }
+    }*/
 
 
     }
