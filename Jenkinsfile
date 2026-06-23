@@ -6,7 +6,6 @@ pipeline {
   }
 	environment {
 		REGISTRY_USER = "pcsijflo" // Cambia por tu usuario real de Docker Hub
-        IMAGE_NAME    = "mi-backend-spring"
         // Nombre de la imagen que vamos a crear para nuestra aplicación
         IMAGE_NAME = "learning-center-platform-small"
         TAG        = "${env.BUILD_NUMBER}" // Usa el número de ejecución de Jenkins como versión
